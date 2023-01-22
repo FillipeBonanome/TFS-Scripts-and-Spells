@@ -227,6 +227,27 @@ function createConditionDamageOverTime(cid, conditionType, ticks, damage, subid,
 	return condition
 end
 
+--[[
+*****************************************************************************
+	Função --> applyTileCondition(player, position, condition)
+		- Input: Jogador, posição e condição
+		- Output: Condition de dano.
+		
+	Descrição: Aplica uma condition em todos os inimigos que podem ser ataca-
+	dos pelos jogador em um devido Tile.
+*****************************************************************************
+]]--
+
+function applyTileCondition(player, position, condition)
+	if Tile(position) and Tile(position):getCreatureCount() > 0 then
+		for _, creatures in ipairs(Tile(position):getCreatures()) do
+			if canPlayerAttackCreature(player, creatures) then
+				creatures:addCondition(condition)
+			end
+		end
+	end
+end
+
 --------------------------------------------------------------------- Animações ---------------------------------------------------------------------
 
 --[[
