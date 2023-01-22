@@ -285,6 +285,52 @@ end
 
 --[[
 *****************************************************************************
+	Função --> targetDiamondAnimation(target, start, animation, times)
+		- Input: Target, offset (cima, esquerda, baixo, direita), 
+				 animação de distância, quantas animações terá
+		- Output: Void
+		
+	Descrição: Cria uma animação em formato de diamante que o percorre em
+	sentido horário em volta de um alvo.
+*****************************************************************************
+]]--
+
+function targetDiamondAnimation(target, start, animation, times)
+	
+	local start = start or 0
+	local animation = animation or CONST_ANI_SUDDENDEATH
+	local times = times or 8
+	
+	local offset = {
+		[0] = {x = 0, y = -1},
+		[1] = {x = 1, y = 0},
+		[2] = {x = 0, y = 1},
+		[3] = {x = -1, y = 0}
+	}
+	
+	
+	local posStart = nil
+	
+	for i = 1, times do
+		addEvent(function(tar)
+			if Creature(tar) then
+				local target = Creature(tar)
+				local pos = target:getPosition()
+				if i == 1 then
+					posStart = {x = pos.x + offset[start % 4].x, y = pos.y + offset[start % 4].y, z = pos.z}
+				end
+				local posEnd = {x = pos.x + offset[(start + 1) % 4].x, y = pos.y + offset[(start + 1) % 4].y, z = pos.z}
+				doSendDistanceShoot(posStart, posEnd, animation)
+				posStart = posEnd
+				start = start + 1
+			end
+		end, (i - 1) * 120, target:getId())
+	end
+	
+end
+
+--[[
+*****************************************************************************
 	Função --> createImplosionAnimation(position, distance)
 		- Input: Posição, animação de distance
 		- Output: Void
