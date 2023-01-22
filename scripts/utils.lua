@@ -72,6 +72,40 @@ end
 
 --[[
 *****************************************************************************
+	Função --> canPlayerAttackCreature(player, creature)
+		- Input: Jogador e alvo
+		- Output: booleano
+		
+	Descrição: Verifica se o jogador pode ou não atacar a criatura
+*****************************************************************************
+]]--
+
+function canPlayerAttackCreature(player, creature)
+	if creature == player then
+		return false
+	end
+	
+	if isPlayer(creature) then
+		if isPlayer(creature) and creature:getParty() ~= nil and creature:getParty() == player:getParty() then
+			return false
+		end
+	end
+	
+	if isSummon(creature) then
+		if isPlayer(creature:getMaster()) and creature:getMaster():getParty() ~= nil and creature:getMaster():getParty() == player:getParty() then
+			return false
+		end
+		
+		if player == creature:getMaster() then
+			return false
+		end
+	end
+	
+	return true
+end
+
+--[[
+*****************************************************************************
 	Função --> getPlayerWeaponType(player)
 		- Input: Jogador.
 		- Output: Valor inteiro que representa o tipo da arma.
