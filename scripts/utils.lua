@@ -121,17 +121,6 @@ end
 
 --[[
 *****************************************************************************
-	Função --> createConditionParalyze(cid, ticks, percentage)
-		- Input: Jogador, duração (valor em segundos), porcentagem (valor inteiro entre 0 e 1).
-		- Output: Condition de paralyze.
-		
-	Descrição: Cria uma condição de paralisia que dura ticks segundos e tem
-	força de percentage %.
-*****************************************************************************
-]]--
-
---[[
-*****************************************************************************
 	Função --> calculateSpellDamage(player, multiplier, base)
 		- Input: Jogador, multiplicador de dano, dano base
 		
@@ -151,6 +140,17 @@ function calculateSpellDamage(player, multiplier, base)
 	return damage
 	
 end
+
+--[[
+*****************************************************************************
+	Função --> createConditionParalyze(cid, ticks, percentage)
+		- Input: Jogador, duração (valor em segundos), porcentagem (valor inteiro entre 0 e 1).
+		- Output: Condition de paralyze.
+		
+	Descrição: Cria uma condição de paralisia que dura ticks segundos e tem
+	força de percentage %.
+*****************************************************************************
+]]--
 
 function createConditionParalyze(cid, ticks, percentage)
 	local ticks = ticks or 10
