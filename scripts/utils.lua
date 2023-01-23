@@ -32,6 +32,20 @@ WEAPON_ANIMATION_TABLE = {
 
 --[[
 *****************************************************************************
+	Função --> isCreatureUnholy(creature)
+		- Input: Criatura
+		- Output: Booleano
+		
+	Descrição: Verifica se uma criatura é do  tipo Undead ou Fire
+*****************************************************************************
+]]--
+
+function isCreatureUnholy(creature)
+	return isMonster(creature) and (creature:getType():race() == 3 or creature:getType():race() == 4)
+end
+
+--[[
+*****************************************************************************
 	Função --> getItemAttribute(uid, key)
 		- Input: UniqueId e Atributo
 		- Output: Valor do atributo
@@ -142,7 +156,7 @@ end
 
 --[[
 *****************************************************************************
-	Função --> canAttackTile(position)
+	Função --> canAttackTile(positionA, positionB)
 		- Input: posição A, posição B
 		- Output: booleano
 		
