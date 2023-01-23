@@ -19,6 +19,7 @@ function onCastSpell(cid, var)
 	damage = math.random(0.7 * damage, damage)
 	
 	doTargetCombat(cid, target, COMBAT_PHYSICALDAMAGE, -damage, -damage)
+	doSendMagicEffect(target:getPosition(), CONST_ME_STUN)
 	target:addCondition(createConditionParalyze(cid, 1.5, 0.2))
 	
 	return true
