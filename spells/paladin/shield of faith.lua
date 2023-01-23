@@ -9,7 +9,7 @@
 
 function onCastSpell(cid, var)
 	
-	local duration = 
+	local duration = 60
 	
 	local target = cid:getTarget()
 	
