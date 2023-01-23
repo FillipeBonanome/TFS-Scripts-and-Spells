@@ -1,4 +1,4 @@
----------------------------------------------------------------------- Constantes ---------------------------------------------------------------------
+--------------------------------------------------------------------- Constantes ---------------------------------------------------------------------
 
 OFFSET_TABLE = {
 	[0] = {x = 0, y = -1},
@@ -26,6 +26,87 @@ WEAPON_ANIMATION_TABLE = {
 	[5] = CONST_ANI_ETHEREALSPEAR
 }
 --------------------------------------------------------------------- Funções Utilitárias ---------------------------------------------------------------------
+
+--[[
+*****************************************************************************
+	Função --> getItemAttribute(uid, key)
+		- Input: UniqueId e Atributo
+		- Output: Valor do atributo
+		
+	Descrição: Pega um atributo de um item já que item:getAttribute(valor)
+	não funciona muito bem
+*****************************************************************************
+]]--
+
+function getItemAttribute(uid, key)
+    local i = ItemType(Item(uid):getId())
+    local string_attributes = {
+    [ITEM_ATTRIBUTE_NAME] = i:getName(),
+    [ITEM_ATTRIBUTE_ARTICLE] = i:getArticle(),
+    [ITEM_ATTRIBUTE_PLURALNAME] = i:getPluralName(),
+    ["name"] = i:getName(),
+    ["article"] = i:getArticle(),
+    ["pluralname"] = i:getPluralName() }
+
+    local numeric_attributes = {
+    [ITEM_ATTRIBUTE_WEIGHT] = i:getWeight(),
+    [ITEM_ATTRIBUTE_ATTACK] = i:getAttack(),
+    [ITEM_ATTRIBUTE_DEFENSE] = i:getDefense(),
+    [ITEM_ATTRIBUTE_EXTRADEFENSE] = i:getExtraDefense(),
+    [ITEM_ATTRIBUTE_ARMOR] = i:getArmor(),
+    [ITEM_ATTRIBUTE_HITCHANCE] = i:getHitChance(),
+    [ITEM_ATTRIBUTE_SHOOTRANGE] = i:getShootRange(),
+    ["weight"] = i:getWeight(),
+    ["attack"] = i:getAttack(),
+    ["defense"] = i:getDefense(),
+    ["extradefense"] = i:getExtraDefense(),
+    ["armor"] = i:getArmor(),
+    ["hitchance"] = i:getHitChance(),
+    ["shootrange"] = i:getShootRange() }
+
+    local attr = Item(uid):getAttribute(key)
+    if tonumber(attr) then
+        if numeric_attributes[key] then
+            return attr ~= 0 and attr or numeric_attributes[key]
+        end
+    else
+        if string_attributes[key] then
+            if attr == "" then
+                return string_attributes[key]
+            end
+        end
+    end
+    return attr
+end
+
+--[[
+*****************************************************************************
+	Função --> getPlayerTotalAttribute(player, attribute, ammo)
+		- Input: Jogador, atributo e um booleano se vai contar a munição ou não
+		- Output: Soma de atributos encontrados nos itens do jogador
+		
+	Descrição: Verifica cada parte do corpo do jogador e pega um atributo em
+	específico para somar no final e dar o resultado total.
+*****************************************************************************
+]]--
+
+function getPlayerTotalAttribute(player, attribute, ammo)
+	local value = 0
+	local last = 9
+	
+	if ammo then
+		last = 10
+	end
+	
+	for i = 1, last do
+		if player:getSlotItem(i) then
+			local item = player:getSlotItem(i)
+			value = value + getItemAttribute(item.uid, attribute)
+		end
+	end
+	
+	return value
+end
 
 --[[
 *****************************************************************************
