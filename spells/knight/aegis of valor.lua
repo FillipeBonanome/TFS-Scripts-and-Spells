@@ -16,6 +16,10 @@ function onCastSpell(cid, var)
 	
 	targetDiamondAnimation(cid, 0, CONST_ANI_LARGEROCK, 8)
 	targetDiamondAnimation(cid, 2, CONST_ANI_LARGEROCK, 8)
+	doSendMagicEffect(cid:getPosition(), CONST_ME_CRAPS)
+	
+	cid:registerEvent("globalBuffsHandler")
+	cid:registerEvent("globalBuffsHandlerTimer")
 	
 	cid:sendTextMessage(36, "You are protected by the Aegis of Valor, reducing incomming damage by 10%. Double effectiveness against physical damage.")
 	
