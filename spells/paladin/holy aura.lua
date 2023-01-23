@@ -25,7 +25,10 @@ function onCastSpell(cid, var)
 					for j = -size, size do
 						local spellPos = {x = pos.x + i, y = pos.y + j, z = pos.z}
 						if canAttackTile(pos, spellPos) then
-							doAreaCombat(player, COMBAT_HOLYDAMAGE, spellPos, nil, -damage / duration, -damage / duration, CONST_ME_NONE)
+							local creatures = getAttacklableCreaturesInPosition(player, spellPos)
+							for k = 1, #creatures do
+								doTargetCombat(player, creatures[k], COMBAT_HOLYDAMAGE, -damage / duration, -damage / duration)
+							end
 						end
 					end
 				end
