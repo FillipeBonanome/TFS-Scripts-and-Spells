@@ -508,7 +508,7 @@ function createImplosionAnimation(position, distance)
 
 	local offset = CIRCULAR_TABLE
 	
-	for i = 1, #offset do
+	for i = 0, 7 do
 		local initPos = {x = position.x + offset[i].x, y = position.y + offset[i].y, z = position.z}
 		doSendDistanceShoot(initPos, position, distance or CONST_ANI_SMALLHOLY)
 	end
