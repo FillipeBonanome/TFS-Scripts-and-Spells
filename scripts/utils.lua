@@ -1,5 +1,8 @@
 --------------------------------------------------------------------- Constantes ---------------------------------------------------------------------
 
+GLOBAL_STORAGEBUFFID = 100500
+GLOBAL_STORAGEBUFFTIMER = 100501
+
 OFFSET_TABLE = {
 	[0] = {x = 0, y = -1},
 	[1] = {x = 1, y = 0},
@@ -272,7 +275,7 @@ function createConditionParalyze(cid, ticks, percentage)
 	local percentage = percentage or 0.4
 	
 	local condition = createConditionObject(CONDITION_PARALYZE)
-	setConditionParam(condition, CONDITION_PARAM_OWNER, cid)
+	setConditionParam(condition, CONDITION_PARAM_OWNER, cid:getId())
 	setConditionParam(condition, CONDITION_PARAM_TICKS, ticks * 1000)
 	setConditionFormula(condition, -percentage, 0, -percentage, 0)
 	
@@ -301,7 +304,7 @@ function createConditionDamageOverTime(cid, conditionType, ticks, damage, subid,
 	
 	local condition = createConditionObject(conditionType)
 	setConditionParam(condition, CONDITION_PARAM_DELAYED, 1)
-	setConditionParam(condition, CONDITION_PARAM_OWNER, cid)
+	setConditionParam(condition, CONDITION_PARAM_OWNER, cid:getId())
 	condition:setParameter(CONDITION_PARAM_SUBID, subid)
 	addDamageCondition(condition, ticks, interval, -damage)
 	
