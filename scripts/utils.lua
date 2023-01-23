@@ -204,6 +204,31 @@ end
 
 --[[
 *****************************************************************************
+	Função --> getAttaclableCreaturesInPosition(player, position)
+		- Input: Jogador e posição
+		- Output: lista de criaturas
+		
+	Descrição: Retorna uma lista de criaturas atacáveis pelo jogador que estão
+	em uma certa posição.
+*****************************************************************************
+]]--
+
+function getAttacklableCreaturesInPosition(player, position)
+	local creatureList = {}
+
+	if Tile(position):getCreatureCount() > 0 then
+		for _, creatures in ipairs(Tile(position):getCreatures()) do
+			if canPlayerAttackCreature(player, creatures) then
+				table.insert(creatureList, creatures)
+			end
+		end
+	end
+	
+	return creatureList
+end
+
+--[[
+*****************************************************************************
 	Função --> getPlayerWeaponType(player)
 		- Input: Jogador.
 		- Output: Valor inteiro que representa o tipo da arma.
