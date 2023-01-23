@@ -20,6 +20,11 @@ function creatureevent.onHealthChange(creature, attacker, primaryDamage, primary
 						primaryDamage = primaryDamage * 0.9
 					end
 				end
+			elseif buffId == 2 then
+				if attacker and origin ~= 99 then
+					doTargetCombat(creature, attacker, COMBAT_HOLYDAMAGE, -primaryDamage * 0.15, - primaryDamage * 0.15, nil, 99)
+					doSendDistanceShoot(creature:getPosition(), attacker:getPosition(), CONST_ANI_SMALLHOLY)
+				end
 			end
 		end
 	return primaryDamage, primaryType, secondaryDamage, secondaryType
@@ -33,6 +38,7 @@ function creatureevent.onThink(creature, interval)
 
 	local buffsWords = {
 		[1] = "Your Aegis of Valor ended...",
+		[2] = "Your Shield of Faith ended...",
 	}
 
 	if creature:getStorageValue(GLOBAL_STORAGEBUFFTIMER) == os.time() then
