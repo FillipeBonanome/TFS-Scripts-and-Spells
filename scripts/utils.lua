@@ -229,6 +229,47 @@ end
 
 --[[
 *****************************************************************************
+	Função --> simpleMeleePlayerTargetPushOver(player, target)
+		- Input: Jogador e alvo.
+		- Output: Booleano
+		
+	Descrição: Empurra o alvo se possível, caso empurrar possui retorno ver-
+	dadeiro, caso contrário falso.
+*****************************************************************************
+]]--
+
+function simpleMeleePlayerTargetPushOver(player, target)
+	local pPos = player:getPosition()
+	local tPos = target:getPosition()
+	
+	local offset = CIRCULAR_TABLE
+	local index = 0
+	
+	for i = 1, #offset do
+		local offsetArray = offset[i]
+		local checkPPos = {x = pPos.x + offsetArray.x, y = pPos.y + offsetArray.y, z = pPos.z}
+		local checkTPos = {x = tPos.x, y = tPos.y, z = tPos.z}
+		
+		if checkPPos.x == checkTPos.x and checkPPos.y == checkTPos.y then
+			index = i
+			break
+		end
+		
+	end
+	
+	local newPos = {x = tPos.x + offset[index].x, y = tPos.y + offset[index].y, z = tPos.z}
+	
+	if Tile(newPos):getCreatureCount() > 0 or Tile(newPos):hasFlag(TILESTATE_BLOCKSOLID) then
+		return false
+	else
+		target:teleportTo(newPos, true)
+		return true
+	end
+	
+end
+
+--[[
+*****************************************************************************
 	Função --> getPlayerWeaponType(player)
 		- Input: Jogador.
 		- Output: Valor inteiro que representa o tipo da arma.
