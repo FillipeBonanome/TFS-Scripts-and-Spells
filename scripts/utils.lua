@@ -270,8 +270,8 @@ end
 
 --[[
 *****************************************************************************
-	Função --> bounceOnContact(cid, target, damage, multiplier, bounces, animation, element)
-		- Input: Jogador, alvo, dano, multiplicador, quiques, animação e elemento do dano.
+	Função --> bounceOnContact(cid, targetPos, damage, multiplier, bounces, animation, element)
+		- Input: Jogador, posição do alvo, dano, multiplicador, quiques, animação e elemento do dano.
 		- Output: void.
 		
 	Descrição: Faz com que gere uma faísca do alvo, fazendo que ela quique em
@@ -279,12 +279,12 @@ end
 *****************************************************************************
 ]]--
 
-function bounceOnContact(cid, target, damage, multiplier, bounces, animation, element)
-	if bounces > 0 and Creature(cid) and Creature(target) then
+function bounceOnContact(cid, targetPos, damage, multiplier, bounces, animation, element)
+	if bounces > 0 and Creature(cid) then
 		local player = Creature(cid)
-		local target = Creature(target)
+		--local target = Creature(target)
 		local size = 2
-		local pos = target:getPosition()
+		local pos = targetPos
 		local animation = animation or CONST_ANI_ENERGYBALL
 		local element = element or COMBAT_ENERGYDAMAGE
 		local cArray = {}
@@ -295,7 +295,7 @@ function bounceOnContact(cid, target, damage, multiplier, bounces, animation, el
 				if Tile(spellPos) and isSightClear(spellPos, pos) then
 					if Tile(spellPos):getCreatureCount() > 0 then
 						for _, creatures in ipairs(Tile(spellPos):getCreatures()) do
-							if canPlayerAttackCreature(player, creatures) and creatures ~= target then
+							if canPlayerAttackCreature(player, creatures) and spellPos ~= pos then
 								table.insert(cArray, creatures)
 							end
 						end
@@ -310,15 +310,15 @@ function bounceOnContact(cid, target, damage, multiplier, bounces, animation, el
 			local damage = damage * multiplier
 			
 			if Creature(creature) then
-				doSendDistanceShoot(target:getPosition(), creature:getPosition(), animation)
+				local cPos = creature:getPosition()
+				doSendDistanceShoot(targetPos, cPos, animation)
 				doTargetCombat(player, creature, element, -damage, -damage)
-				addEvent(function(cid, creature) 
-					if Creature(cid) and Creature(creature) then
+				addEvent(function(cid) 
+					if Creature(cid) then
 						local player = Creature(cid)
-						local creature = Creature(creature)
-						bounceOnContact(player, creature, damage, multiplier, bounces, animation, element)
+						bounceOnContact(player, cPos, damage, multiplier, bounces, animation, element)
 					end
-				end, 150, player:getId(), creature:getId())
+				end, 150, player:getId())
 				
 			end
 		end
