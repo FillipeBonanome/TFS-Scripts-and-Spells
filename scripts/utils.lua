@@ -229,6 +229,37 @@ end
 
 --[[
 *****************************************************************************
+	Função --> getAttackableCreaturesInArea(cid, pos, size)
+		- Input: Jogador, Posição, Tamanho
+		- Output: Lista de criaturas atacáveis
+		
+	Descrição: Pega a lista de criaturas atacáveis numa distância de até
+	size em volta da posição pos.
+*****************************************************************************
+]]--
+
+function getAttackableCreaturesInArea(cid, pos, size)
+	
+	local array = {}
+
+	for i = -size, size do
+		for j = -size, size do
+			local spellPos = {x = pos.x + j, y = pos.y + i, z = pos.z}
+			if canAttackTile(cid:getPosition(), spellPos) and (i ~= 0 or j ~= 0) then
+				local creatures = getAttacklableCreaturesInPosition(cid, spellPos)
+				for k = 1, #creatures do
+					local creature = creatures[k]
+					table.insert(array, creature)
+				end
+			end
+		end
+	end
+	
+	return array
+end
+
+--[[
+*****************************************************************************
 	Função --> simpleMeleePlayerTargetPushOver(player, target)
 		- Input: Jogador e alvo.
 		- Output: Booleano
@@ -279,7 +310,7 @@ end
 *****************************************************************************
 ]]--
 
-function bounceOnContact(cid, targetPos, damage, multiplier, bounces, animation, element)
+function bounceOnContact(cid, targetPos, damage, multiplier, bounces, animation, element, lastTarget)
 	if bounces > 0 and Creature(cid) then
 		local player = Creature(cid)
 		--local target = Creature(target)
@@ -295,7 +326,7 @@ function bounceOnContact(cid, targetPos, damage, multiplier, bounces, animation,
 				if Tile(spellPos) and isSightClear(spellPos, pos) then
 					if Tile(spellPos):getCreatureCount() > 0 then
 						for _, creatures in ipairs(Tile(spellPos):getCreatures()) do
-							if canPlayerAttackCreature(player, creatures) and spellPos ~= pos then
+							if canPlayerAttackCreature(player, creatures) and creatures ~= lastTarget then
 								table.insert(cArray, creatures)
 							end
 						end
@@ -313,16 +344,123 @@ function bounceOnContact(cid, targetPos, damage, multiplier, bounces, animation,
 				local cPos = creature:getPosition()
 				doSendDistanceShoot(targetPos, cPos, animation)
 				doTargetCombat(player, creature, element, -damage, -damage)
+				lastTarget = Creature(creature)
 				addEvent(function(cid) 
 					if Creature(cid) then
 						local player = Creature(cid)
-						bounceOnContact(player, cPos, damage, multiplier, bounces, animation, element)
+						bounceOnContact(player, cPos, damage, multiplier, bounces, animation, element, lastTarget)
 					end
 				end, 150, player:getId())
 				
 			end
 		end
 		
+	end
+end
+
+--[[
+*****************************************************************************
+	Função --> spreadOnContact(cid, pos, damage, multiplier, size, element, animation)
+		- Input: Jogador, posição do alvo, dano, multiplicador, tamanho, elemento e animação
+		- Output: void.
+		
+	Descrição: Faz com que a sua magia se espalhe em alvos próximos causando
+	uma porcentagem de dano.
+*****************************************************************************
+]]--
+
+function spreadOnContact(cid, pos, damage, multiplier, size, element, animation)
+	local pos = pos or cid:getPosition()
+	local damage = damage or 10
+	local multiplier = multiplier or 0.5
+	local size = size or 2
+	local element = element or COMBAT_ENERGYDAMAGE
+	local animation = animation or CONST_ANI_ENERGY
+	
+	local creatures = getAttackableCreaturesInArea(cid, pos, size)
+	
+	if Tile(pos):getCreatureCount() > 0 then
+		addEvent(function(cid) 
+			if Creature(cid) then
+				local cid = Creature(cid)
+				for i = 1, #creatures do
+					local creature = creatures[i]
+					if Creature(creature) then
+						local cPos = creature:getPosition()
+						doSendDistanceShoot(pos, cPos, animation)
+						doTargetCombat(cid, creature, element, -damage * multiplier, -damage * multiplier)
+					end
+				end
+			end
+		end, 150, cid:getId())
+	end
+end
+
+--[[
+*****************************************************************************
+	Função --> createSimpleExplosion(cid, pos, area, damage, element, animation)
+		- Input: Jogador, Posição, Matriz, Dano, Elemento e Animação
+		- Output: void.
+		
+	Descrição: Cria uma área de dano igual a area com animação e elemento
+	específico
+*****************************************************************************
+]]--
+
+function createSimpleExplosion(cid, pos, area, damage, element, animation)
+	local pos = pos or cid:getPosition()
+	local area = area or {{1,1,1},{1,1,1},{1,1,1}}
+	local damage = damage or 10
+	local element = element or COMBAT_ENERGYDAMAGE
+	local animation = animation or CONST_ME_TELEPORT
+	
+	local center = math.ceil(#area/2)
+	
+	for i = 1, #area do
+		for j = 1, #area do
+			if area[i][j] > 0 then
+				local spellPos = {x = pos.x + (j - center), y = pos.y + (i - center), z = pos.z}
+				if canAttackTile(cid:getPosition(), spellPos) then
+					doAreaCombat(cid, element, spellPos, nil, -damage, -damage, animation)
+				end
+			end
+		end
+	end
+	
+end
+
+--[[
+*****************************************************************************
+	Função --> createSimpleExplosion(cid, pos, area, damage, element, animation, condition)
+		- Input: Jogador, Posição, Matriz, Dano, Elemento, Animação e Condição
+		- Output: void.
+		
+	Descrição: Cria uma área de dano igual a area com animação e elemento
+	específico, aplicando condição em todos os alvos atingidos pela magia
+*****************************************************************************
+]]--
+
+function createSimpleExplosionCondition(cid, pos, area, damage, element, animation, condition)
+	local pos = pos or cid:getPosition()
+	local area = area or {{1,1,1},{1,1,1},{1,1,1}}
+	local damage = damage or 10
+	local element = element or COMBAT_ENERGYDAMAGE
+	local animation = animation or CONST_ME_TELEPORT
+	
+	local center = math.ceil(#area/2)
+	
+	for i = 1, #area do
+		for j = 1, #area do
+			if area[i][j] > 0 then
+				local spellPos = {x = pos.x + (j - center), y = pos.y + (i - center), z = pos.z}
+				if canAttackTile(cid:getPosition(), spellPos) then
+					doAreaCombat(cid, element, spellPos, nil, -damage, -damage, animation)
+					if condition then
+						applyTileCondition(cid, spellPos, condition)
+					end
+				end
+			end
+		end
 	end
 end
 
