@@ -270,6 +270,64 @@ end
 
 --[[
 *****************************************************************************
+	Função --> bounceOnContact(cid, target, damage, multiplier, bounces, animation, element)
+		- Input: Jogador, alvo, dano, multiplicador, quiques, animação e elemento do dano.
+		- Output: void.
+		
+	Descrição: Faz com que gere uma faísca do alvo, fazendo que ela quique em
+	vários outros em sua volta
+*****************************************************************************
+]]--
+
+function bounceOnContact(cid, target, damage, multiplier, bounces, animation, element)
+	if bounces > 0 and Creature(cid) and Creature(target) then
+		local player = Creature(cid)
+		local target = Creature(target)
+		local size = 2
+		local pos = target:getPosition()
+		local animation = animation or CONST_ANI_ENERGYBALL
+		local element = element or COMBAT_ENERGYDAMAGE
+		local cArray = {}
+		
+		for i = -size, size do
+			for j = -size, size do
+				local spellPos = {x = pos.x + i, y = pos.y + j, z = pos.z}
+				if Tile(spellPos) and isSightClear(spellPos, pos) then
+					if Tile(spellPos):getCreatureCount() > 0 then
+						for _, creatures in ipairs(Tile(spellPos):getCreatures()) do
+							if canPlayerAttackCreature(player, creatures) and creatures ~= target then
+								table.insert(cArray, creatures)
+							end
+						end
+					end
+				end
+			end
+		end
+		
+		if #cArray > 0 then
+			local creature = cArray[math.random(#cArray)]
+			local bounces = bounces - 1
+			local damage = damage * multiplier
+			
+			if Creature(creature) then
+				doSendDistanceShoot(target:getPosition(), creature:getPosition(), animation)
+				doTargetCombat(player, creature, element, -damage, -damage)
+				addEvent(function(cid, creature) 
+					if Creature(cid) and Creature(creature) then
+						local player = Creature(cid)
+						local creature = Creature(creature)
+						bounceOnContact(player, creature, damage, multiplier, bounces, animation, element)
+					end
+				end, 150, player:getId(), creature:getId())
+				
+			end
+		end
+		
+	end
+end
+
+--[[
+*****************************************************************************
 	Função --> getPlayerWeaponType(player)
 		- Input: Jogador.
 		- Output: Valor inteiro que representa o tipo da arma.
@@ -508,7 +566,7 @@ function createImplosionAnimation(position, distance)
 
 	local offset = CIRCULAR_TABLE
 	
-	for i = 0, 7 do
+	for i = 0, #offset do
 		local initPos = {x = position.x + offset[i].x, y = position.y + offset[i].y, z = position.z}
 		doSendDistanceShoot(initPos, position, distance or CONST_ANI_SMALLHOLY)
 	end
