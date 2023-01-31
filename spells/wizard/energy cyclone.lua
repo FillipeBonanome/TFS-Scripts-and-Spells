@@ -1,8 +1,8 @@
 --[[
 *****************************************************************************
-	Magia --> Thunderstorm
+	Magia --> Energy Cyclone
 		
-	Descrição: Cria uma chuva de raios em uma posição fixa.
+	Descrição: Cria um vórtice de energia que causa dano em sua volta
 *****************************************************************************
 ]]--
 
