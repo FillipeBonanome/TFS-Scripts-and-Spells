@@ -466,6 +466,62 @@ end
 
 --[[
 *****************************************************************************
+	Função --> createFixedRain(cid, pos, elements, distances, animations, minDamage, maxDamage, size, duration, frequency)
+		- Input: Jogador, Posição, Elementos, Animações de Distancia, Animações de Contato, Dano Mínimo, Dano Máximo, Tamanho, Duração e Frequencia
+		- Output: void.
+		
+	Descrição: Cria uma chuva de tamanho size, com duração duration e que cai frequency pingos por segundo.
+	Causa dano nos elementos elements aleatoriamente, separando cada distance e animations referindo ao elements aleatorizado.
+*****************************************************************************
+]]--
+
+function createFixedRain(cid, pos, elements, distances, animations, minDamage, maxDamage, size, duration, frequency)
+	local pos = pos or cid:getPosition()
+	local elements = elements or {COMBAT_FIREDAMAGE}
+	local distances = distances or {CONST_ANI_FIRE}
+	local animations = animations or {CONST_ME_FIREAREA}
+	local minDamage = minDamage or 10
+	local maxDamage = maxDamage or 25
+	local size = size or 3
+	local duration = duration or 8
+	local frequency = frequency or 20
+	
+	
+	for i = 1, duration * frequency do
+		addEvent(function(cid) 
+		
+			if Creature(cid) then
+				local cid = Creature(cid)
+				local randomOffset = {x = math.random(-size, size), y = math.random(-size, size)}
+				local spellPos = {x = pos.x + randomOffset.x, y = pos.y + randomOffset.y, z = pos.z}
+				
+				if canAttackTile(pos, spellPos) then
+					local initPos = {x = spellPos.x - 5, y = spellPos.y - 8, z = spellPos.z}
+					local randomElementIndex = math.random(math.min(#elements, #distances, #animations))
+					doSendDistanceShoot(initPos, spellPos, distances[randomElementIndex])
+					doSendMagicEffect(spellPos, animations[randomElementIndex])
+					
+					local damage = math.random(minDamage, maxDamage)
+					
+					if Tile(spellPos):getCreatureCount() > 0 then
+						for _, creatures in ipairs(Tile(spellPos):getCreatures()) do
+							if canPlayerAttackCreature(cid, creatures) then
+								doTargetCombat(cid, creatures, elements[randomElementIndex], -damage, -damage)
+							end
+						end
+					end
+					
+				end
+				
+			end
+		
+		end, i * 1000 / frequency, cid:getId())
+	end
+	
+end
+
+--[[
+*****************************************************************************
 	Função --> getPlayerWeaponType(player)
 		- Input: Jogador.
 		- Output: Valor inteiro que representa o tipo da arma.
