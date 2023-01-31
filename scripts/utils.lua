@@ -513,6 +513,54 @@ end
 
 --[[
 *****************************************************************************
+	Função --> createContinuousTrap(cid, pos, element, damage, animation, condition, duration)
+		- Input: Jogador, Posição, Elemento, Dano, Animação da Trap, Animação da Trap, Condição aplicada no inimigo, Duração da Trap
+		- Output: void.
+		
+	Descrição: Cria uma armadilha contínua que não é desativada quando um inimigo
+	pisa nela, mas causa algum dano + condition continuamente.
+*****************************************************************************
+]]--
+
+function createContinuousTrap(cid, pos, element, damage, animation, condition, duration)
+	local pos = pos or cid:getPosition()
+	local element = element or COMBAT_PHYSICALDAMAGE
+	local damage = damage or 10
+	local animation = animation or CONST_ME_HITAREA
+	local condition = condition or false
+	local duration = duration or 8
+	local checkTimes = 5
+	local event = {}
+	
+	for i = 1, checkTimes * duration do
+		table.insert(event, addEvent(function(cid) 
+			if Creature(cid) then
+				local cid = Creature(cid)
+				
+				if i % 5 == 1 then
+					doSendMagicEffect(pos, animation)
+				end
+				
+				if #getAttacklableCreaturesInPosition(cid, pos) > 0 then
+					local creatures = getAttacklableCreaturesInPosition(cid, pos)
+					
+					for j = 1, #creatures do
+						local creature = creatures[j]
+						doTargetCombat(cid, creature, element, -damage, -damage)
+						if condition then
+							creature:addCondition(condition)
+						end
+					end
+					
+				end
+				
+			end
+		end, (i - 1) * 1000 / checkTimes, cid:getId()))
+	end
+end
+
+--[[
+*****************************************************************************
 	Função --> createCycloneAttack(cid, pos, element, distance, animation, rotations, damage, delay, posAnimation)
 		- Input: Jogador, Posição, Elemento, Animação de Distância, Animação de Posição, Quantidade de Rotações, Dano, Delay entr cada Hit e Animação no Centro
 		- Output: void.
