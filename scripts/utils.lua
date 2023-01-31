@@ -466,6 +466,53 @@ end
 
 --[[
 *****************************************************************************
+	Função --> createExplosiveTrap(cid, pos, area, damage, element, trapAnimation, hitAnimation, duration)
+		- Input: Jogador, Posição, Area da Explosão, Dano da Explosão, Elemento, Animação da Trap, Animação da Explosão, Duração da Trap
+		- Output: void.
+		
+	Descrição: Cria uma armadilha em uma posição onde é ativada caso um inimigo
+	pisar em cima
+*****************************************************************************
+]]--
+
+function createExplosiveTrap(cid, pos, area, damage, element, trapAnimation, hitAnimation, duration)
+	local pos = pos or cid:getPosition()
+	local area = area or {{1,1,1},{1,1,1},{1,1,1}}
+	local damage = damage or 15
+	local element = element or COMBAT_PHYSICALDAMAGE
+	local trapAnimation = trapAnimation or CONST_ME_EXPLOSIONAREA
+	local hitAnimation = hitAnimation or CONST_ME_EXPLOSIONHIT
+	local duration = duration or 8
+	local checkTimes = 10
+	local event = {}
+	
+	for i = 1, checkTimes * duration do
+		table.insert(event, addEvent(function(cid) 
+			if Creature(cid) then
+				local cid = Creature(cid)
+				
+				if i % 5 == 1 then
+					doSendMagicEffect(pos, trapAnimation)
+				end
+				
+				if #getAttacklableCreaturesInPosition(cid, pos) > 0 then
+					for j = 1, #event do
+						local ev = event[j]
+						stopEvent(ev)
+					end
+					
+					createSimpleExplosion(cid, pos, area, damage, element, hitAnimation)
+					
+				end
+				
+			end
+		end, (i - 1) * 1000 / checkTimes, cid:getId()))
+	end
+	
+end
+
+--[[
+*****************************************************************************
 	Função --> createCycloneAttack(cid, pos, element, distance, animation, rotations, damage, delay, posAnimation)
 		- Input: Jogador, Posição, Elemento, Animação de Distância, Animação de Posição, Quantidade de Rotações, Dano, Delay entr cada Hit e Animação no Centro
 		- Output: void.
