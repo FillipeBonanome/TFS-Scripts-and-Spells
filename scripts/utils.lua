@@ -204,7 +204,7 @@ end
 
 --[[
 *****************************************************************************
-	Função --> getAttaclableCreaturesInPosition(player, position)
+	Função --> getAttacklableCreaturesInPosition(player, position)
 		- Input: Jogador e posição
 		- Output: lista de criaturas
 		
@@ -462,6 +462,68 @@ function createSimpleExplosionCondition(cid, pos, area, damage, element, animati
 			end
 		end
 	end
+end
+
+--[[
+*****************************************************************************
+	Função --> createCycloneAttack(cid, pos, element, distance, animation, rotations, damage, delay, posAnimation)
+		- Input: Jogador, Posição, Elemento, Animação de Distância, Animação de Posição, Quantidade de Rotações, Dano, Delay entr cada Hit e Animação no Centro
+		- Output: void.
+		
+	Descrição: Cria um vórtice que ataca inimigos em sua volta em sentido horário
+	repetidas vezes.
+*****************************************************************************
+]]--
+
+function createCycloneAttack(cid, pos, element, distance, animation, rotations, damage, delay, posAnimation)
+	local pos = pos or cid:getPosition()
+	local element = element or COMBAT_ENERGYDAMAGE
+	local distance = distance or CONST_ANI_ENERGY
+	local animation = animation or CONST_ME_ENERGYHIT
+	local rotations = rotations or 4
+	local damage = damage or 10
+	local delay = delay or 150
+	
+	local offsets = CIRCULAR_TABLE
+	
+	for i = 1, #offsets * rotations do
+		addEvent(function(cid) 
+			if Creature(cid) then
+				local cid = Creature(cid)
+				local index = i % 8
+				local offset = offsets[index]
+				local spellPos = {x = pos.x + offset.x, y = pos.y + offset.y, z = pos.z}
+				
+				if i % 4 == 0 and posAnimation then
+					doSendMagicEffect(pos, posAnimation)
+				end
+				
+				if canAttackTile(pos, spellPos) then
+					doSendDistanceShoot(pos, spellPos, distance)
+					doSendMagicEffect(spellPos, animation)
+					
+					local creatures = getAttacklableCreaturesInPosition(cid, spellPos)
+					
+					for i = 1, #creatures do
+						local creature = creatures[i]
+						doTargetCombat(cid, creature, element, -damage, -damage)
+					end
+					
+					if index == 1 then
+						local creatures = getAttacklableCreaturesInPosition(cid, pos)
+						
+						for i = 1, #creatures do
+							local creature = creatures[i]
+							doTargetCombat(cid, creature, element, -damage, -damage)
+						end
+					end
+					
+				end
+			end
+		end, (i - 1) * delay, cid:getId())
+		
+	end
+	
 end
 
 --[[
