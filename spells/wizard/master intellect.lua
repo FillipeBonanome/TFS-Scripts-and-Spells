@@ -1,9 +1,8 @@
 --[[
 *****************************************************************************
-	Magia --> Shield of Faith
+	Magia --> Master Intellect
 		
-	Descrição: Faz com que ataques recebidos sejam refletidos em 10% do dano
-	com o elemento luz.
+	Descrição: Amplifica o seu dano de raio causado em 15%
 *****************************************************************************
 ]]--
 
