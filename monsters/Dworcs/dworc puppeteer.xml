@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<monster name="Dworc Puppeteer" nameDescription="a dworc puppeteer" race="blood" experience="70" speed="175">
+	<health now="110" max="110" />
+	<look type="214" corpse="6055" />
+	<targetchange interval="4000" chance="10" />
+	<flags>
+		<flag summonable="0" />
+		<flag attackable="1" />
+		<flag hostile="1" />
+		<flag illusionable="0" />
+		<flag convinceable="0" />
+		<flag pushable="1" />
+		<flag canpushitems="1" />
+		<flag canpushcreatures="1" />
+		<flag targetdistance="4" />
+		<flag staticattack="90" />
+		<flag runonhealth="0" />
+		<flag canwalkonfire="0" />
+	</flags>
+	<attacks>
+		<attack name="dworcpuppeteer1" interval="2000" chance="100" range="4" />
+		<attack name="dworcpuppeteer2" interval="6000" chance="40" range="4" />
+		<attack name="dworcpuppeteer2" interval="12000" chance="45" range="4" />
+	</attacks>
+	<defenses>
+		
+	</defenses>
+	<elements>
+		<element physicalPercent="0" />
+		<element energyPercent="0" />
+		<element icePercent="0" />
+		<element firePercent="-10" />
+		<element earthPercent="40" />
+		<element holyPercent="-20" />
+		<element deathPercent="65" />
+	</elements>
+	<immunities>
+		<immunity invisible="1" />
+	</immunities>
+	<voices interval="5000" chance="10">
+	</voices>
+</monster>
