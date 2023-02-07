@@ -60,7 +60,6 @@ function createWaveWithDelay(creature, element, area, animation, damage, delay, 
 								doSendMagicEffect(spellArea, animation)
 							else
 								local randomIndex = selectRandomAnim(randomAnim)
-								print(randomIndex)
 								doSendMagicEffect(spellArea, randomAnim[randomIndex].name)
 							end
 							if tile:getCreatureCount() > 0 then
@@ -74,9 +73,7 @@ function createWaveWithDelay(creature, element, area, animation, damage, delay, 
 			end
 		end, (a - 1) * delay, creature:getId())
 	end
-	
-	
-	
+
 end
 
 function onCastSpell(creature, variant)
@@ -91,24 +88,17 @@ function onCastSpell(creature, variant)
 	}
 	
 	local delay = 75
-	local animation = CONST_ME_POISONAREA
 	
 	local randomAnim = {
-		[1] = {name = CONST_ME_GREEN_RINGS, chance = 20},
-		[2] = {name = CONST_ME_YELLOWSMOKE, chance = 20},
-		[3] = {name = CONST_ME_GREENSMOKE, chance = 20},
-		[4] = {name = CONST_ME_YELLOW_RINGS, chance = 20},
+		[1] = {name = CONST_ME_GREEN_RINGS, chance = 35},
+		[2] = {name = CONST_ME_YELLOWSMOKE, chance = 35},
+		[3] = {name = CONST_ME_GREENSMOKE, chance = 65},
+		[4] = {name = CONST_ME_YELLOW_RINGS, chance = 65},
+		[5] = {name = CONST_ME_POISONAREA, chance = 15}
 	}
 	
-	for i = 1, 3 do
-		addEvent(function(cid) 
-			if Creature(cid) then
-				local creature = Creature(cid)
-				local damage = math.random(130, 170)
-				createWaveWithDelay(creature, element, area, animation, damage, delay, randomAnim)
-			end
-		end, (i - 1) * 700, creature:getId())
-	end
+	local damage = math.random(130, 170)
+	createWaveWithDelay(creature, element, area, animation, damage, delay, randomAnim)
 	
 	return true
 	

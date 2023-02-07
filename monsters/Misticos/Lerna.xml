@@ -20,6 +20,7 @@
 		<attack name="lerna1" interval="2000" chance="100" range="1" />
 		<attack name="lerna2" interval="3200" chance="15" range="1" />
 		<attack name="lerna3" interval="7500" chance="70" range="4" />
+		<attack name="lerna4" interval="6200" chance="65" range="4" />
 	</attacks>
 	<defenses armor="27" defense="27">
 		
