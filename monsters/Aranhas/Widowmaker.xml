@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<monster name="Widowmaker" nameDescription="a widowmaker" race="venom" experience="4850" speed="285">
+	<health now="7200" max="7200" />
+	<look type="347" corpse="11310" />
+	<targetchange interval="4000" chance="10" />
+	<flags>
+		<flag summonable="0" />
+		<flag attackable="1" />
+		<flag hostile="1" />
+		<flag illusionable="1" />
+		<flag convinceable="0" />
+		<flag pushable="0" />
+		<flag canpushitems="1" />
+		<flag canpushcreatures="1" />
+		<flag targetdistance="1" />
+		<flag staticattack="90" />
+		<flag runonhealth="300" />
+	</flags>
+	<attacks>
+		<attack name="lerna1" interval="2000" chance="100" range="1" />
+		<attack name="lerna2" interval="3200" chance="15" range="1" />
+		<attack name="lerna3" interval="6150" chance="70" range="4" />
+		<attack name="lerna4" interval="3450" chance="65" range="4" />
+	</attacks>
+	<defenses armor="27" defense="27">
+		
+	</defenses>
+	<elements>
+		<element physicalPercent="10" />
+		<element energyPercent="0" />
+		<element icePercent="0" />
+		<element firePercent="-10" />
+		<element earthPercent="100" />
+		<element holyPercent="0" />
+		<element deathPercent="0" />
+	</elements>
+	<immunities>
+		<immunity paralyze="1" />
+		<immunity invisible="1" />
+	</immunities>
+	
+	<voices interval="5000" chance="10">
+		<attack name="widowmaker1" interval="2000" chance="100" range="4" />
+		<attack name="widowmaker2" interval="8200" chance="40" range="1" />
+	</voices>
+	<loot>
+		<item name="gold coin" countmax="100" chance="34000" />
+		<item name="gold coin" countmax="100" chance="34000" />
+		<item name="gold coin" countmax="46" chance="20000" />
+		<item name="ham" countmax="4" chance="60000" />
+		<item name="platinum coin" countmax="3" chance="49000" />
+		<item name="hydra head" chance="10120" />
+		<item name="small sapphire" chance="5000" />
+		<item name="cucumber" chance="4780" />
+		<item name="ring of healing" chance="1190" />
+		<item name="knight armor" chance="1000" />
+		<item name="hydra egg" chance="930" />
+		<item name="stone skin amulet" chance="900" />
+		<item name="warrior helmet" chance="890" />
+		<item name="life crystal" chance="520" />
+		<item name="strong mana potion" chance="470" />
+		<item name="royal helmet" chance="220" />
+		<item name="medusa shield" chance="220" />
+		<item name="boots of haste" chance="110" />
+	</loot>
+</monster>
