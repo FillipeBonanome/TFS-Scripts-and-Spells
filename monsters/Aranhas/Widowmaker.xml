@@ -17,10 +17,10 @@
 		<flag runonhealth="300" />
 	</flags>
 	<attacks>
-		<attack name="lerna1" interval="2000" chance="100" range="1" />
-		<attack name="lerna2" interval="3200" chance="15" range="1" />
-		<attack name="lerna3" interval="6150" chance="70" range="4" />
-		<attack name="lerna4" interval="3450" chance="65" range="4" />
+		<attack name="widowmaker1" interval="1500" chance="100" range="5" />
+		<attack name="widowmaker2" interval="6000" chance="85" range="1" />
+		<attack name="widowmaker3" interval="3400" chance="20" range="5" />
+		<attack name="widowmaker4" interval="8500" chance="75" range="5" />
 	</attacks>
 	<defenses armor="27" defense="27">
 		
@@ -30,7 +30,7 @@
 		<element energyPercent="0" />
 		<element icePercent="0" />
 		<element firePercent="-10" />
-		<element earthPercent="100" />
+		<element earthPercent="60" />
 		<element holyPercent="0" />
 		<element deathPercent="0" />
 	</elements>
@@ -40,8 +40,7 @@
 	</immunities>
 	
 	<voices interval="5000" chance="10">
-		<attack name="widowmaker1" interval="2000" chance="100" range="4" />
-		<attack name="widowmaker2" interval="8200" chance="40" range="1" />
+		
 	</voices>
 	<loot>
 		<item name="gold coin" countmax="100" chance="34000" />
