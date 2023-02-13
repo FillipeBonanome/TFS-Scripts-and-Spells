@@ -32,6 +32,32 @@ WEAPON_ANIMATION_TABLE = {
 
 --[[
 *****************************************************************************
+	Função --> findfunction(x)
+		- Input: Nome da função
+		- Output: Função
+		
+	Descrição: Retorna uma função com nome x
+*****************************************************************************
+]]--
+
+function findfunction(x)
+	assert(type(x) == "string")
+	local f=_G
+	for v in x:gmatch("[^%.]+") do
+		if type(f) ~= "table" then
+			return nil, "looking for '"..v.."' expected table, not "..type(f)
+		end
+    f=f[v]
+    end
+    if type(f) == "function" then
+      return f
+    else
+      return nil, "expected function, not "..type(f)
+    end
+end
+
+--[[
+*****************************************************************************
 	Função --> isCreatureUnholy(creature)
 		- Input: Criatura
 		- Output: Booleano
@@ -921,6 +947,28 @@ function createImplosionAnimation(position, distance)
 		local initPos = {x = position.x + offset[i].x, y = position.y + offset[i].y, z = position.z}
 		doSendDistanceShoot(initPos, position, distance or CONST_ANI_SMALLHOLY)
 	end
+end
+
+--[[
+*****************************************************************************
+	Função --> doSendMagicEffectRandomDelay(pos, effect, minDelay, maxDelay)
+		- Input: Posição, Efeito, Delay mínimo, Delay máximo
+		- Output: Void
+		
+	Descrição: Cria uma animação em uma posição em um intervalo aleatório entre
+	minDelay e maxDelay
+*****************************************************************************
+]]--
+
+function doSendMagicEffectRandomDelay(pos, effect, minDelay, maxDelay)
+
+	local effect = effect or CONST_ME_MAGIC_RED
+	local minDelay = minDelay or 0
+	local maxDelay = maxDelay or 500
+
+	addEvent(function() 
+		doSendMagicEffect(pos, effect)
+	end, math.random(minDelay, maxDelay))
 end
 
 --------------------------------------------------------------------- Storage for Monsters ---------------------------------------------------------------------
